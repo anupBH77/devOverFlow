@@ -3,7 +3,7 @@ import { TiHomeOutline, TiTag } from "react-icons/ti";
 import { IoPeopleOutline, IoPricetagOutline } from "react-icons/io5";
 import { BsQuestionSquare } from "react-icons/bs";
 import { BiCollection } from "react-icons/bi";
-const tabList: tabListType[] = [
+export const tabList: tabListType[] = [
   {
     routename: "Home",
     routeUrl: "/Home",

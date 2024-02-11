@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import MobileNevBar from "@/components/nevigation/MobileNevBar";
+import NevBar from "@/components/nevigation/NevBar";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +19,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      
+      <body className={`${inter.className} flex`}>
+        <NevBar></NevBar>
+     <MobileNevBar></MobileNevBar>
+        {children}
+        </body>
     </html>
   );
 }
