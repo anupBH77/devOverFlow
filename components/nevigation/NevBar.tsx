@@ -1,20 +1,14 @@
-"use client"
-import { tabList } from '@/utils/constants/TabList'
-import { useRouter,usePathname } from 'next/navigation'
-import React, { useState } from 'react'
+import { UserButton } from "@clerk/nextjs";
+import SearchBar from "../inputs/SearchBar";
 
-const NevBar = () => {
-    const router = useRouter();
-    const curPath = usePathname()
-   
-  return (
-    <div className=' hidden md:flex flex-col  border border-opacity-50  border-gray-800  pt-4 border-y-0 border-l-0  h-screen  w-1/4 '>
-        {tabList.map(tab=><div onClick={()=>router.push(tab.routeUrl)} className={`${curPath==tab.routeUrl ?'bg-orange-500 ':''} hover:cursor-pointer align-middle items-center gap-5 pl-5 flex py-5 `}>
-            <tab.routeIcon size={30}></tab.routeIcon>
-            <span className=' font-light'>{tab.routename}</span>
-        </div>)}
-    </div>
-  )
+export default function NevBar(){
+    return(
+        <div className=" items-center  flex justify-between sticky top-0 bg-black  border border-opacity-50  border-gray-800 border-x-0 border-t-0 bg-opacity-50 backdrop-blur-md h-[10vh]">
+            <h1 className="text-2xl font-light">NevBar</h1>
+            <SearchBar placeholder="Search Globally..." className="w-1/3 h-1/2"/>
+            <span className=" m-2">
+            <UserButton />
+        </span>
+        </div>
+    )
 }
-
-export default NevBar

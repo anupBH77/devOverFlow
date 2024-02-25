@@ -1,8 +1,11 @@
 import React from 'react'
+import HomeLayout from './_comps/homeLayout'
 
 const Page = () => {
   return (
-    <div>Page</div>
+    <div className=' w-full'>
+      <HomeLayout></HomeLayout>
+    </div>
   )
 }
 

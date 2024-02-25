@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Roboto } from "next/font/google";
 import "./globals.css";
-import MobileNevBar from "@/components/nevigation/MobileNevBar";
+
+import { ClerkProvider } from "@clerk/nextjs";
+import SideBar from "@/components/nevigation/SideBar";
+import MobileBar from "@/components/nevigation/MobileBar";
 import NevBar from "@/components/nevigation/NevBar";
 
-
-const inter = Inter({ subsets: ["latin"] });
+const roboto = Inter({
+  weight: "400",
+  subsets: ["greek-ext"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,13 +23,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      
-      <body className={`${inter.className} flex`}>
-        <NevBar></NevBar>
-     <MobileNevBar></MobileNevBar>
-        {children}
+    <ClerkProvider>
+      <html lang="en">
+        <body className={`${roboto.className} bg-black text-white `}>
+          <NevBar />
+          <div className=" flex ">
+            <SideBar />
+            <MobileBar />
+            {children}
+          </div>
         </body>
-    </html>
+      </html>
+    </ClerkProvider>
   );
 }
