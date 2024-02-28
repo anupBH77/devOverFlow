@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input"
 import TextEditor from "@/components/inputs/TextEditor"
 import { RxCrossCircled } from "react-icons/rx"
+import { useState } from "react"
 
 
 const formSchema = z.object({
@@ -26,7 +27,10 @@ const formSchema = z.object({
   tagList: z.array(z.string()).nonempty({
     message: "At least one tag is required.",
   }),
-  tag:z.string()
+  tag:z.string().refine((value) => !/\s/.test(value), {
+    message: "Input should not contain spaces"
+  })
+
 })
 
 export function AskForm() {
@@ -39,17 +43,38 @@ export function AskForm() {
 
         },
       })
-      const handleTagSelect = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-          console.log(form.getValues())
-       
-          form.setValue("tag", e.currentTarget.value) 
-          form.setValue("tagList", [...form.getValues("tagList"), e.currentTarget.value])
-          form.setValue("tag", "") 
+      const [tagList,setTagList] = useState<string[]>([])
+      
+      const handleTagSelect = (e:any) => {
 
-         
+       if(e.currentTarget.value.length>10) return
+        form.setValue("tag", e.currentTarget.value.trim()) 
+        
+      }
+      const onKeyDown = (e:any) => {
+        if (e.key === "Enter") {
+          e.preventDefault()
+          if(e.currentTarget.value=="") return
+          console.log(tagList.length)
+          if(tagList.length>4) {
+            form.setError("tag", {
+              type: "manual",
+              message: "You can only add 5 tags"
+            })
+            return;
+          }
+          setTagList([...tagList,e.currentTarget.value.trim()])
+          form.setValue("tagList",
+      //@ts-ignore
+       tagList)
+          form.setValue("tag", "")   
         }
       
+      }
+      const removeTag = (index:number) => {
+        const newTags = tagList.filter((_, i) => i !== index)
+       
+       setTagList(newTags);
       }
       function onSubmit(values: z.infer<typeof formSchema>) {
 
@@ -58,7 +83,7 @@ export function AskForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="  space-y-8 flex-wrap ">
         <FormField
           control={form.control}
           name="question"
@@ -66,7 +91,7 @@ export function AskForm() {
             <FormItem>
               <FormLabel>Question</FormLabel>
               <FormControl className="focus:outline-none ">
-                <Input placeholder="eg. how to handle error?" {...field} className=" p-10 text-lg focus:outline-none pl-2 text-white  bg-transparent bg-slate-700 outline-none" />
+                <Input placeholder="eg. how to handle error?" {...field} className="border-none p-10 focus:border-none text-lg focus:outline-none pl-2 text-white  bg-transparent bg-slate-700 outline-none" />
               </FormControl>
               <FormDescription>
                 Detailed Question.
@@ -77,13 +102,16 @@ export function AskForm() {
         />
         <TextEditor/>
         <FormField
+        
           control={form.control}
           name="tag"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Tags</FormLabel>
               <FormControl>
-                <Input onKeyDown={handleTagSelect} placeholder="eg. javascript, react" {...field} className="p-10 text-lg focus:outline-none pl-2 text-white  bg-transparent bg-slate-700 outline-none" />
+                <Input 
+                //@ts-ignore
+               placeholder="eg. javascript, react" {...field } onChange={handleTagSelect} onKeyDown={onKeyDown}className="p-10 text-lg focus:border-black focus:outline-none pl-2 text-white border-none bg-transparent bg-slate-700 outline-none" />
               </FormControl>
               <FormDescription>
                 Add tags to your question.
@@ -91,11 +119,11 @@ export function AskForm() {
               <FormMessage />
             </FormItem>
           )}/>
-          <div className="flex flex-row gap-4 flex-wrap">
-            {form.getValues("tagList").map((tag, index) => (
-              <div key={index} className="bg-slate-700 min-w-16 items-center justify-center text-white  rounded-sm">
-              <RxCrossCircled size={20} className=" left-12 bottom-2   relative"/>
-                <p className="text-center text-lg">
+          <div className="flex flex-row gap-8 flex-wrap bg w-1/2">
+            {tagList.map((tag, index) => (
+              <div key={index} className="text-gray-400 bg-slate-900 shadow-2xl shadow-gray-800 items-center p-0 justify-center relative  ">
+              <RxCrossCircled size={25} onClick={()=>removeTag(index)} className=" hover:cursor-pointer absolute right-[-15px] top-[-15px]"/>
+                <p className="text-center text-lg p-2 px-4 ">
                 {tag}
                 </p>
               </div>

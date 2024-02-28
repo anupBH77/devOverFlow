@@ -3,7 +3,8 @@ import { tabList } from "@/utils/constants/TabList";
 import { UserButton } from "@clerk/nextjs";
 import { useRouter, usePathname } from "next/navigation";
 import React, { useState } from "react";
-
+import { Button } from "../ui/button";
+import { SignUp } from "@clerk/nextjs";
 const SideBar = () => {
   const router = useRouter();
   const curPath = usePathname();
@@ -25,6 +26,11 @@ const SideBar = () => {
         
 
       </div>
+      <div className="flex justify-center flex-col items-center gap-4 mb-2">
+       
+        <Button onClick={()=>router.push('/sign-in')} className=" w-[90%] p-10 rounded-sm  text-xl border border-gray-800 bg-slate-800  text-orange-500">Sign In</Button>
+        <Button onClick={()=>router.push('/sign-up')} className=" w-[90%] p-10 rounded-sm text-xl border border-gray-800 ">Sign Up</Button>
+       </div>
     </div>
   );
 };
